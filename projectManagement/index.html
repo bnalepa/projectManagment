@@ -1,21 +1,141 @@
 <!doctype html>
-<html lang="en">
+<html lang="pl">
   <head>
     <meta charset="UTF-8" />
-
     <link rel="stylesheet" href="src/styles/bootstrap.min.css">
     <link rel="stylesheet" href="src/styles/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Vite + TS</title>
+    <meta name="google-signin-client_id" content="850041088923-9fdkudm7bpsbd848nbnc5h73cvn2fcq7.apps.googleusercontent.com">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>
+    <div class="top-bar">
+      <div id="login" class="container">
+        <form id="login-form">
+          <div class="login-field">
+            <input type="text" class="form-control" id="username" required placeholder="login"/>
+          </div>
+          <div class="login-field">
+            <input type="password" class="form-control" id="password" required placeholder="hasło"/>
+          </div>
+          <button type="submit" class="btn btn-primary">Zaloguj się</button>
+        </form>
+        <div id="error-message" class="text-danger hidden">Błędne hasło</div>
+        <div id="g_id_onload"
+          data-client_id="850041088923-9fdkudm7bpsbd848nbnc5h73cvn2fcq7.apps.googleusercontent.com"
+          data-callback="handleCredentialResponse">
+        </div>
+        <div class="g_id_signin" data-type="standard"></div>
+      </div>
+    </div>
     <div id="app">
       <header id="header"></header>
       <div id="content"> </div>
     </div>
 
     <script type="module" src="/src/main.ts"></script>
+
+    <script>
+
+    ////////////////////////////////////////////////////////////////
+
+
+      const form = document.getElementById('login-form');
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        try {
+          const response = await fetch('http://localhost:3000/api/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+          });
+          if (!response.ok) {
+            throw new Error('Invalid credentials');
+          }
+          const data = await response.json();
+          console.log('Token:', data.token);
+          console.log('Refresh Token:', data.refreshToken);
+
+          // Przechowywanie tokenów w localStorage
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('refreshToken', data.refreshToken);
+          localStorage.setItem('user', JSON.stringify(data.user));
+
+          // Wyświetlanie informacji o zalogowanym użytkowniku
+          document.getElementById('login').innerHTML = `
+            <div>
+              Zalogowany jako: ${data.user.username}
+              <button id="logout" class="btn btn-secondary">Wyloguj</button>
+            </div>
+          `;
+
+          
+
+          // Dodanie funkcjonalności wylogowania
+          document.getElementById('logout').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('user');
+            location.reload();
+          });
+
+        } catch (error) {
+          document.getElementById('error-message').classList.remove('hidden');
+        }
+
+      });
+
+      function handleCredentialResponse(response) {
+    fetch('http://localhost:3000/api/google-login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ idToken: response.credential }),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Invalid Google credentials');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Token:', data.token);
+      console.log('Refresh Token:', data.refreshToken);
+
+      // Przechowywanie tokenów w localStorage
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('refreshToken', data.refreshToken);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      // Wyświetlanie informacji o zalogowanym użytkowniku
+      document.getElementById('login').innerHTML = `
+        <div>
+          Zalogowany jako: ${data.user.username}
+          <button id="logout" class="btn btn-secondary">Wyloguj</button>
+        </div>
+      `;
+
+      // Dodanie funkcjonalności wylogowania
+      document.getElementById('logout').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        location.reload();
+      });
+
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('error-message').classList.remove('hidden');
+    });
+  }
+    </script>
 
   </body>
 </html>

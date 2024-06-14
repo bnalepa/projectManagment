@@ -1,5 +1,6 @@
-import { collection, addDoc, getDocs, Firestore, doc, deleteDoc, updateDoc, getDoc} from 'firebase/firestore/lite';
+import { collection, addDoc, getDocs, Firestore, doc, deleteDoc, updateDoc,query,where, getDoc,} from 'firebase/firestore/lite';
 import { db } from './DatabaseConnection';
+import { User } from '../models/User';
 
 
 /*
@@ -34,6 +35,23 @@ export class ProjectDAO  {
     Story = 'stories',
     Task = 'tasks',
   }
+
+export async function getUserByLogin(login: string){
+    const usersCollection = collection(db, 'users');
+    const q = query(usersCollection, where('login', '==', login));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+        return null;
+    }
+    const userDoc = querySnapshot.docs[0];  
+    return { id: userDoc.id, ...userDoc.data() } as User;
+}
+
+export async function addUser(user: User): Promise<void> {
+  const usersCollection = collection(db, 'users');
+  await addDoc(usersCollection, user);
+}
+
 
 export class EntityDAO<T>  {
     private db: Firestore;

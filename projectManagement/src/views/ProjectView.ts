@@ -1,50 +1,64 @@
 import { EntityDAO, EntityType } from '../data/DAO';
 import { Project } from '../models/Project';
 import { displayStory } from '../views/StoryView'
+import { checkAdminRole, getLoggedUser } from '../scripts/login';
+//import { addUsersToDatabase } from '../data/AddUser'
+
 
 const DAO = new EntityDAO<Project>(EntityType.Project)
 const contentDiv = document.getElementById("content")
 const headerDiv = document.getElementById("header")
 
 
+
+
+
 async function displayProjects() {
 
-    
+    //addUsersToDatabase();
+
+    let isAdmin = checkAdminRole();
+    let isLogged = getLoggedUser();
+
     if(headerDiv)
     {
-        headerDiv.innerHTML = '<h1>Projects</h1>'
+        headerDiv.innerHTML = '<h3>Projekty</h3>'
     }
     if(contentDiv)
         {
             contentDiv.innerHTML = ''
 
-            const buttonString = document.createElement('div')
-            buttonString.className = 'card'
-            buttonString.innerHTML = `
-
-            <div class="btn-group right-align">
+            if(isLogged)
+                {
+                    const buttonString = document.createElement('div')
+                    buttonString.className = 'card'
+                    buttonString.innerHTML = `
+        
+                    <div class="btn-group right-align">
+                    
+                        <button type="button" class="btn btn-outline-secondary btn-add">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                            </svg>
+                        </button>
+                    </div>
+                    `
+                    contentDiv.appendChild(buttonString)
+        
+                    document.querySelectorAll('.btn-add').forEach(button => {
+                        button.addEventListener('click', async (event) => {
+                            createProject()
+                        });
+                      });
+                }
             
-                <button type="button" class="btn btn-outline-secondary btn-add">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-                    </svg>
-                </button>
-            </div>
-            `
-            contentDiv.appendChild(buttonString)
-
-            document.querySelectorAll('.btn-add').forEach(button => {
-                button.addEventListener('click', async (event) => {
-                    createProject()
-                });
-              });
 
             const DAO = new EntityDAO<Project>(EntityType.Project);
             const Entities = await DAO.getAllEntity();
             Entities.forEach((entity: Project) => {
             const displayString = document.createElement('div')
             displayString.className = 'card'
-            displayString.innerHTML = `
+            let temp = `
                 <div class = 'card-title'><b>  ${entity.name}</b> </div> 
                 <div class = 'card-text'>  ${entity.description}
                     <div class="btn-group right-align">
@@ -53,7 +67,12 @@ async function displayProjects() {
                                 <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
                                 <path d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z"/>
                             </svg> 
-                        </button>                   
+                        </button> 
+                        
+            `
+            if(isAdmin)
+                {   
+                    temp += `               
                         <button type="button" class="btn btn-outline-secondary btn-edit" data-id='${entity.id}'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                                 <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"></path>
@@ -65,10 +84,10 @@ async function displayProjects() {
                             </svg>
                     </button>
                 </div>
-                
-        `
+                `
+                }
 
-
+            displayString.innerHTML = temp;   
             contentDiv.appendChild(displayString)
         
         })
@@ -162,7 +181,7 @@ async function editProject(id: string) {
     const project = projectData[0];
 
     if (headerDiv) {
-        headerDiv.innerHTML = '<h1>Edit Project</h1>';
+        headerDiv.innerHTML = '<h3>Edytuj projekt</h3   >';
     }
     if (contentDiv) {
 
@@ -225,3 +244,4 @@ async function saveProject() {
 
 
 export {displayProjects}
+

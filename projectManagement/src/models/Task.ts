@@ -4,10 +4,10 @@ export interface Task {
   description: string;
   priority: 'low' | 'medium' | 'high';
   storyId: string;
-  estimatedTime: number;
+  estimatedTime: number ;
   status: 'todo' | 'doing' | 'done';
-  createdAt: Date;
-  startTime?: Date;
-  endTime?: Date;
-  responsibleUserId?: string;
+  createdAt: Date | string;
+  startDate?: Date | string ;
+  endDate?: Date | string ;
+  responsibleUserId: string;
 }

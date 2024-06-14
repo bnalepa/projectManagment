@@ -1,6 +1,42 @@
 #app {
-  margin: 100px 10% 0px;
+  margin: 100px 25% 0px;
 }
 .right-align {
   float: right;
+}
+
+table {
+  width: 100%;
+}
+
+.hidden {
+  display: none;
+}
+.container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+#top-bar {
+  height: 20px;
+
+  float:right
+
+}
+
+#login {
+  max-width: 550px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+
+
+}
+.login-field {
+  width: 200px;
+  float:left
 }

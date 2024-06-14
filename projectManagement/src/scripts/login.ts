@@ -20,7 +20,7 @@ export function getLoggedUser()
     let user = localStorage.getItem('user');
     if(typeof(user) === 'string')
     {
-        return JSON.parse(user).username
+        return JSON.parse(user).id
     }
     return false
 

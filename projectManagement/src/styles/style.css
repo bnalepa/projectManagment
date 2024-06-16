@@ -75,3 +75,7 @@ body.dark-mode div#container div {
   color: rgb(23, 21, 162);
   border-color: rgb(23, 21, 162);
 }
+
+#notif {
+  margin: 20px;
+}

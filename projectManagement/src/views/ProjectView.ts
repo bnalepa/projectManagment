@@ -2,6 +2,7 @@ import { EntityDAO, EntityType } from '../data/DAO';
 import { Project } from '../models/Project';
 import { displayStory } from '../views/StoryView'
 import { checkAdminRole, getLoggedUser } from '../scripts/login';
+import { notificationService } from '../data/Notification';
 //import { addUsersToDatabase } from '../data/AddUser'
 
 
@@ -238,6 +239,13 @@ async function saveProject() {
     };
 
     await DAO.addEntity(newProject);
+    notificationService.send({
+        title: 'Nowy projekt',
+        message: `Projekt "${newProject.name}" został dodany.        `,
+        date: new Date().toISOString(),
+        priority: 'high',
+        read: false
+    });
     await displayProjects();
 }
 }

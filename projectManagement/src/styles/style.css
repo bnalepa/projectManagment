@@ -40,3 +40,38 @@ table {
   width: 200px;
   float:left
 }
+
+#toggle-dark-mode {
+  margin-left: 400px;
+}
+
+body.dark-mode {
+  background-color: #121212;
+  color: rgb(23, 21, 162);
+}
+
+body.dark-mode .card {
+  background-color: #121212;
+  border-color: rgb(23, 21, 162);
+}
+
+body.dark-mode input[type="text"],body.dark-mode input[type="password"],body.dark-mode .btn, body.dark-mode select {
+  background-color: #121212;
+  color: rgb(23, 21, 162);
+  border-color: rgb(23, 21, 162);
+}
+
+body.dark-mode .container {
+  border-color: rgb(23, 21, 162);
+}
+
+body.dark-mode .btn-primary {
+  background-color: #121212;
+  color: rgb(23, 21, 162);
+  border-color: rgb(23, 21, 162);
+}
+body.dark-mode div#container div {
+  background-color:  #121212 !important;
+  color: rgb(23, 21, 162);
+  border-color: rgb(23, 21, 162);
+}

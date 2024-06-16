@@ -249,7 +249,7 @@ async function editTask(id: string) {
     const task = taskData[0];
 
     if (headerDiv) {
-        headerDiv.innerHTML = '<h1>Edit Task</h1>';
+        headerDiv.innerHTML = '<h1>Edytuj zadanie</h1>';
     }
     if (contentDiv) {
         const users = await userDAO.getAllEntity();
@@ -279,7 +279,7 @@ async function editTask(id: string) {
                         {
                             contentDiv.innerHTML += ` 
                             <div class="mb-3">
-                                    <label for="edit-status" class="form-label">Status</label>
+
                                     <select class="form-control" id="edit-status" style='display:none'>
                                     <option value="todo" selected >Todo</option>
  

@@ -101,7 +101,7 @@ async function displayFilteredStory(projectId: string, filter: string | null) {
                             <div class = 'card-text'>Priorytet: ${entity.priority} </div>                
                             <div class = 'card-text'>Status: ${entity.status} </div>  
                             <div class = 'card-text'>Data utworzenia: ${entity.createdAt} </div> 
-                            <div class = 'card-text'>Twórca: ${entity.ownerId} </div> 
+                            <div class = 'card-text'>TwórcaID: ${entity.ownerId} </div> 
                             <div class="btn-group right-align">
                                 <button type="button" class="btn btn-outline-secondary btn-open" data-id='${entity.id}'> 
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open" viewBox="0 0 16 16">
